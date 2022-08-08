@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand">{{pageTitle}}</a>
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link"
+           routerLink='/welcome'
+           routerLinkActive="active">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           routerLink='/products'
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">Product List</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+           [routerLink]="['/products', 0, 'edit']"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">Add Product</a>
+      </li>
+    </ul>
+    <ul class="nav ms-auto">
+      <li class="nav-item"
+          *ngIf="isLoggedIn">
+        <a class="nav-link"
+           routerLink='/login'>Welcome {{ userName }}</a>
+      </li>
+      <li class="nav-item"
+          *ngIf="!isLoggedIn">
+        <a class="nav-link"
+           routerLink='/login'>Log In</a>
+      </li>
+      <li class="nav-item"
+          *ngIf="isLoggedIn">
+        <a class="nav-link"
+           (click)="logOut()"
+           style="cursor: pointer">Log Out</a>
+      </li>
+    </ul>
+  </div>
+</nav>
