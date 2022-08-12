@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { CriteriaComponent } from '../shared/criteria/criteria.component';
 
 import { IProduct } from './product';
 import { ProductService } from './product.service';
@@ -18,8 +19,10 @@ import { ProductService } from './product.service';
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit, AfterViewInit {
+  @ViewChild(CriteriaComponent) criteriaComponent: CriteriaComponent;
+
   pageTitle = 'Product List';
-   listFilter!: string;
+  parentListFilter!: string;
 
   showImage = false;
 
@@ -30,15 +33,19 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   filteredProducts: IProduct[] = [];
   products: IProduct[] = [];
 
+  includeDetails = true;
+
   constructor(private productService: ProductService) {}
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.parentListFilter = this.criteriaComponent.listFilter;
+  }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe({
       next: (products) => {
         this.products = products;
-        this.performFilter(this.listFilter);
+        this.performFilter(this.parentListFilter);
       },
       error: (err) => (this.errorMessage = err),
     });
@@ -46,11 +53,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   toggleImage(): void {
     this.showImage = !this.showImage;
-  }
-
-  onFilterChange(text: string): void {
-    this.listFilter = text;
-    this.performFilter(text);
   }
 
   performFilter(filterBy?: string): void {

@@ -4,7 +4,12 @@
   </div>
   <div class="card-body">
     <!-- Filter by the Title   -->
-    <pm-criteria></pm-criteria>
+    <pm-criteria
+      [displayDetails]="includeDetails"
+      [hitCount]="filteredProducts?.length"
+      #filterCriteria
+    ></pm-criteria>
+    {{ filterCriteria.listFilter }}
     <div class="table-responsive">
       <table class="table" *ngIf="products && products.length">
         <thead>

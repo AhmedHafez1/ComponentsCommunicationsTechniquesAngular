@@ -1,40 +1,43 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'pm-criteria',
   templateUrl: './criteria.component.html',
-  styleUrls: ['./criteria.component.css']
+  styleUrls: ['./criteria.component.css'],
 })
-export class CriteriaComponent implements OnInit {
-  private _sub: Subscription | undefined;
-  listFilter!: string;
+export class CriteriaComponent implements OnInit, OnChanges, AfterViewInit {
+  @Input() displayDetails!: boolean;
+  @Input() hitCount!: number;
+
+  hitMessage: string;
+  listFilter: string;
 
   @ViewChild('filterElement') filterElementRef!: ElementRef;
 
- private _filterElement!: NgModel;
+  constructor() {}
 
-  get filterElement(): NgModel {
-    return this._filterElement;
+  ngAfterViewInit(): void {
+    this.filterElementRef.nativeElement.focus();
   }
 
-  @ViewChild(NgModel) set filterElement(value: NgModel) {
-    this._filterElement = value;
-
-    if (this.filterElementRef) {
-      this.filterElementRef.nativeElement.focus();
-    }
-
-    if (this.filterElement && !this._sub) {
-      this._sub = this.filterElement.valueChanges?.subscribe((search) => {
-        this.listFilter = search;
-      });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['hitCount'] && changes['hitCount'].currentValue == 0) {
+      this.hitMessage = 'No Matches For your Search';
+    } else {
+      this.hitMessage = 'Number of hits: ' + this.hitCount;
     }
   }
-  constructor() { }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
