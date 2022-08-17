@@ -2,14 +2,15 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { ProductsParamsService } from 'src/app/products/products-params.service';
 
 @Component({
   selector: 'pm-criteria',
@@ -20,8 +21,18 @@ export class CriteriaComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() displayDetails!: boolean;
   @Input() hitCount!: number;
 
+  @Output() filterChange: EventEmitter<string> = new EventEmitter<string>();
+
   hitMessage: string;
-  listFilter: string;
+
+  private _listFilter: string;
+  public get listFilter(): string {
+    return this._listFilter;
+  }
+  public set listFilter(value: string) {
+    this._listFilter = value;
+    this.filterChange.emit(value);
+  }
 
   @ViewChild('filterElement') filterElementRef!: ElementRef;
 

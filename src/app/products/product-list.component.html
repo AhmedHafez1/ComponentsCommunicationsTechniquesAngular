@@ -7,9 +7,8 @@
     <pm-criteria
       [displayDetails]="includeDetails"
       [hitCount]="filteredProducts?.length"
-      #filterCriteria
+      (filterChange)="onFilterChange($event)"
     ></pm-criteria>
-    {{ filterCriteria.listFilter }}
     <div class="table-responsive">
       <table class="table" *ngIf="products && products.length">
         <thead>
