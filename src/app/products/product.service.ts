@@ -5,7 +5,15 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 
-import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  Observable,
+  of,
+  Subject,
+  tap,
+  throwError,
+} from 'rxjs';
 
 import { IProduct } from './product';
 
@@ -16,7 +24,14 @@ export class ProductService {
   private productsUrl = 'api/products';
   private products: IProduct[];
 
+  private selectedProductSource = new BehaviorSubject<IProduct>(undefined);
+  selectedProductChange$ = this.selectedProductSource.asObservable();
+
   constructor(private http: HttpClient) {}
+
+  changeSelectedProduct(selectedProduct: IProduct | undefined) {
+    this.selectedProductSource.next(selectedProduct);
+  }
 
   getProducts(): Observable<IProduct[]> {
     if (this.products) {
@@ -66,6 +81,7 @@ export class ProductService {
       tap(() => {
         const index = this.products.findIndex((p) => p.id === id);
         if (index > -1) this.products.splice(index, 1);
+        this.changeSelectedProduct(undefined);
       }),
       catchError(this.handleError)
     );
@@ -82,7 +98,10 @@ export class ProductService {
         tap((createdProduct) =>
           console.log('createProduct: ' + JSON.stringify(createdProduct))
         ),
-        tap((product) => this.products.push(product)),
+        tap((product) => {
+          this.products.push(product);
+          this.changeSelectedProduct(product);
+        }),
         catchError(this.handleError)
       );
   }

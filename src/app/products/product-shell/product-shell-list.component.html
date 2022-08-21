@@ -1,21 +1,23 @@
-<div class='card'>
-  <div class='card-header'>
-    {{pageTitle}}
+<div class="card">
+  <div class="card-header">
+    {{ pageTitle }}
   </div>
 
-  <div class='card-body'
-       *ngIf='products'>
-    <div class='list-group'>
-      <button type='button'
-              class='list-group-item'
-              *ngFor='let product of products'>
+  <div class="card-body" *ngIf="products">
+    <div class="list-group">
+      <button
+        type="button"
+        class="list-group-item"
+        *ngFor="let product of products"
+        (click)="onSelect(product)"
+        [class.active]="(selectedProductId$ | async) === product.id"
+      >
         {{ product.productName }} ({{ product.productCode }})
       </button>
     </div>
   </div>
 </div>
 
-<div class='alert alert-danger'
-     *ngIf='errorMessage'>
+<div class="alert alert-danger" *ngIf="errorMessage">
   Error: {{ errorMessage }}
 </div>
